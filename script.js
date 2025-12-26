@@ -1,40 +1,47 @@
-// INTRO AUTO HIDE
-setTimeout(()=>{
-  const intro=document.getElementById("intro");
-  if(intro) intro.style.display="none";
-},3000);
+const bgMusic = document.getElementById("bgMusic");
+const clickSound = document.getElementById("clickSound");
+const hoverSound = document.getElementById("hoverSound");
+const scrollSound = document.getElementById("scrollSound");
+const musicToggle = document.getElementById("musicToggle");
 
-// LIVE TIME
-function updateTime(){
-  const now=new Date();
+let musicOn = false;
+
+musicToggle.addEventListener("click", () => {
+  if (!musicOn) {
+    bgMusic.volume = 0.5;
+    bgMusic.play();
+    musicToggle.textContent = "🔈";
+  } else {
+    bgMusic.pause();
+    musicToggle.textContent = "🔊";
+  }
+  musicOn = !musicOn;
+  clickSound.play();
+});
+
+// Hover sound
+document.querySelectorAll("a, button, span").forEach(el => {
+  el.addEventListener("mouseenter", () => hoverSound.play());
+});
+
+// Scroll sound
+let lastScroll = 0;
+window.addEventListener("scroll", () => {
+  const now = Date.now();
+  if (now - lastScroll > 500) {
+    scrollSound.play();
+    lastScroll = now;
+  }
+});
+
+// Live Time
+function updateTime() {
+  const now = new Date();
   document.getElementById("liveTime").textContent =
     now.toLocaleTimeString();
 }
-setInterval(updateTime,1000);
-updateTime();
-
-// MUSIC SYSTEM
-const music=document.getElementById("bgMusic");
-const toggle=document.getElementById("musicToggle");
-let musicOn=false;
-
-toggle.onclick=()=>{
-  if(!musicOn){
-    music.play();
-    toggle.textContent="🔇";
-  }else{
-    music.pause();
-    toggle.textContent="🔊";
-  }
-  musicOn=!musicOn;
-};
-
-// UI SOUNDS
-const clickSound=document.getElementById("clickSound");
-const hoverSound=document.getElementById("hoverSound");
-const scrollSound=document.getElementById("scrollSound");
-
-// Click sound
+setInterval(updateTime, 1000);
+updateTime();// Click sound
 document.querySelectorAll("a,button,.card").forEach(el=>{
   el.addEventListener("click",()=>{
     clickSound.currentTime=0;
