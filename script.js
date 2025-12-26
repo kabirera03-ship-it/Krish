@@ -1,40 +1,63 @@
-/* ================= INTRO ================= */
-window.onload = () => {
-  setTimeout(() => {
-    const intro = document.getElementById("intro");
-    intro.style.opacity = "0";
-    setTimeout(() => intro.remove(), 1200);
-  }, 2500);
+// INTRO AUTO HIDE
+setTimeout(()=>{
+  const intro=document.getElementById("intro");
+  if(intro) intro.style.display="none";
+},3000);
+
+// LIVE TIME
+function updateTime(){
+  const now=new Date();
+  document.getElementById("liveTime").textContent =
+    now.toLocaleTimeString();
+}
+setInterval(updateTime,1000);
+updateTime();
+
+// MUSIC SYSTEM
+const music=document.getElementById("bgMusic");
+const toggle=document.getElementById("musicToggle");
+let musicOn=false;
+
+toggle.onclick=()=>{
+  if(!musicOn){
+    music.play();
+    toggle.textContent="🔇";
+  }else{
+    music.pause();
+    toggle.textContent="🔊";
+  }
+  musicOn=!musicOn;
 };
 
-/* ================= LIVE TIME ================= */
-setInterval(() => {
-  document.getElementById("liveTime").innerText =
-    new Date().toLocaleTimeString();
-}, 1000);
+// UI SOUNDS
+const clickSound=document.getElementById("clickSound");
+const hoverSound=document.getElementById("hoverSound");
+const scrollSound=document.getElementById("scrollSound");
 
-/* ================= AUDIO (ONLINE SOURCES) ================= */
-const bgMusic = document.getElementById("bgMusic");
-const toggle = document.getElementById("musicToggle");
+// Click sound
+document.querySelectorAll("a,button,.card").forEach(el=>{
+  el.addEventListener("click",()=>{
+    clickSound.currentTime=0;
+    clickSound.play();
+  });
+});
 
-const clickSound = new Audio(
-  "https://assets.mixkit.co/sfx/preview/mixkit-fast-small-sweep-transition-166.mp3"
-);
-const hoverSound = new Audio(
-  "https://assets.mixkit.co/sfx/preview/mixkit-game-hover-1337.mp3"
-);
-const scrollSound = new Audio(
-  "https://assets.mixkit.co/sfx/preview/mixkit-quick-woosh-transition-1382.mp3"
-);
+// Hover sound
+document.querySelectorAll(".card,span,a").forEach(el=>{
+  el.addEventListener("mouseenter",()=>{
+    hoverSound.currentTime=0;
+    hoverSound.play();
+  });
+});
 
-bgMusic.volume = 0.4;
-clickSound.volume = 0.7;
-hoverSound.volume = 0.6;
-scrollSound.volume = 0.3;
-
-let soundOn = false;
-
-/* MUSIC TOGGLE */
+// Scroll sound (once)
+let scrolled=false;
+window.addEventListener("scroll",()=>{
+  if(!scrolled){
+    scrollSound.play();
+    scrolled=true;
+  }
+});/* MUSIC TOGGLE */
 toggle.onclick = () => {
   soundOn = !soundOn;
   toggle.textContent = soundOn ? "🔇" : "🔊";
